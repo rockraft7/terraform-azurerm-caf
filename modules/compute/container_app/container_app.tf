@@ -47,6 +47,16 @@ resource "azurerm_container_app" "ca" {
                 value       = try(env.value.value, null)
               }
             }
+
+            dynamic "volume_mounts" {
+              for_each = try(init_container.value.volume_mounts, {})
+
+              content {
+                name = volume_mounts.value.name
+                path = volume_mounts.value.path
+                sub_path = try(volume_mounts.value.sub_path, null)
+              }
+            }
           }
         }
 
