@@ -122,7 +122,7 @@ resource "azurerm_container_app" "ca" {
     }
 
     dynamic "init_container" {
-      for_each = try(container.value.init_container, {})
+      for_each = var.settings.template.init_container
 
       content {
         name    = init_container.value.name
