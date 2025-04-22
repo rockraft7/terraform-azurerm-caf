@@ -27,39 +27,6 @@ resource "azurerm_container_app" "ca" {
         cpu     = container.value.cpu
         memory  = container.value.memory
 
-        dynamic "init_container" {
-          for_each = try(container.value.init_container, {})
-
-          content {
-            name    = init_container.value.name
-            image   = init_container.value.image
-            args    = try(init_container.value.args, null)
-            command = try(init_container.value.command, null)
-            cpu     = init_container.value.cpu
-            memory  = init_container.value.memory
-
-            dynamic "env" {
-              for_each = try(init_container.value.env, {})
-
-              content {
-                name        = env.value.name
-                secret_name = try(env.value.secret_name, null)
-                value       = try(env.value.value, null)
-              }
-            }
-
-            dynamic "volume_mounts" {
-              for_each = try(init_container.value.volume_mounts, {})
-
-              content {
-                name = volume_mounts.value.name
-                path = volume_mounts.value.path
-                sub_path = try(volume_mounts.value.sub_path, null)
-              }
-            }
-          }
-        }
-
         dynamic "env" {
           for_each = try(container.value.env, {})
 
@@ -145,6 +112,38 @@ resource "azurerm_container_app" "ca" {
 
         dynamic "volume_mounts" {
           for_each = try(container.value.volume_mounts, {})
+
+          content {
+            name = volume_mounts.value.name
+            path = volume_mounts.value.path
+          }
+        }
+      }
+    }
+
+    dynamic "init_container" {
+      for_each = try(container.value.init_container, {})
+
+      content {
+        name    = init_container.value.name
+        image   = init_container.value.image
+        args    = try(init_container.value.args, null)
+        command = try(init_container.value.command, null)
+        cpu     = init_container.value.cpu
+        memory  = init_container.value.memory
+
+        dynamic "env" {
+          for_each = try(init_container.value.env, {})
+
+          content {
+            name        = env.value.name
+            secret_name = try(env.value.secret_name, null)
+            value       = try(env.value.value, null)
+          }
+        }
+
+        dynamic "volume_mounts" {
+          for_each = try(init_container.value.volume_mounts, {})
 
           content {
             name = volume_mounts.value.name
