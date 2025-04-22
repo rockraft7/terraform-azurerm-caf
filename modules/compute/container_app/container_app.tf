@@ -129,8 +129,8 @@ resource "azurerm_container_app" "ca" {
         image   = init_container.value.image
         args    = try(init_container.value.args, null)
         command = try(init_container.value.command, null)
-        cpu     = init_container.value.cpu
-        memory  = init_container.value.memory
+        cpu     = try(init_container.value.cpu, null)
+        memory  = try(init_container.value.memory, null)
 
         dynamic "env" {
           for_each = try(init_container.value.env, {})
