@@ -104,6 +104,7 @@ module "example" {
     batch_pools                            = var.batch_pools
     bastion_hosts                          = var.bastion_hosts
     container_apps                         = var.container_apps
+    container_app_jobs                     = var.container_app_jobs
     container_app_dapr_components          = var.container_app_dapr_components
     container_app_environments             = var.container_app_environments
     container_app_environment_certificates = var.container_app_environment_certificates

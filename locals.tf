@@ -85,6 +85,7 @@ locals {
     batch_jobs                             = try(var.compute.batch_jobs, {})
     batch_pools                            = try(var.compute.batch_pools, {})
     container_apps                         = try(var.compute.container_apps, {})
+    container_app_jobs                     = try(var.compute.container_app_jobs, {})
     container_app_dapr_components          = try(var.compute.container_app_dapr_components, {})
     container_app_environments             = try(var.compute.container_app_environments, {})
     container_app_environment_certificates = try(var.compute.container_app_environment_certificates, {})

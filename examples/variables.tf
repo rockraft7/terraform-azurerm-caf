@@ -574,6 +574,9 @@ variable "container_app_dapr_components" {
 variable "container_apps" {
   default = {}
 }
+variable "container_app_jobs" {
+  default = {}
+}
 variable "container_app_environment_storages" {
   default = {}
 }
