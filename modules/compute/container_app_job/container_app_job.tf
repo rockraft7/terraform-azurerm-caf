@@ -18,6 +18,15 @@ resource "azurerm_container_app_job" "caj" {
   workload_profile_name        = local.workload_profile_name
   replica_retry_limit          = var.replica_retry_limit
 
+  dynamic "manual_trigger_config" {
+    for_each = try(var.settings.manual_trigger_config, {})
+
+    content {
+      parallelism              = try(manual_trigger_config.parallelism, null)
+      replica_completion_count = try(manual_trigger_config.replica_completion_count, null)
+    }
+  }
+
   template {
     dynamic "container" {
       for_each = var.settings.template.container

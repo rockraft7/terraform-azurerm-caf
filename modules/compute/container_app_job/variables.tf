@@ -27,3 +27,6 @@ variable "workload_profile_name" {
 variable "replica_retry_limit" {
   default = 5
 }
+variable "manual_trigger_config" {
+  default = {}
+}
