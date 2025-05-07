@@ -13,6 +13,7 @@ resource "azurerm_container_app" "ca" {
   resource_group_name          = local.resource_group_name
   container_app_environment_id = var.container_app_environment_id
   revision_mode                = var.settings.revision_mode
+  workload_profile_name        = try(var.settings.workload_profile_name, "Consumption")
   tags                         = merge(local.tags, try(var.settings.tags, null))
 
   template {
