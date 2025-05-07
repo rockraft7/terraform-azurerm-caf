@@ -19,7 +19,6 @@ module "container_app_jobs" {
   }
   global_settings = local.global_settings
   settings        = each.value
-  trigger_type    = try(each.value.trigger_type, "manual")
 }
 
 output "container_app_jobs" {

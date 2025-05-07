@@ -27,14 +27,6 @@ variable "workload_profile_name" {
 variable "replica_retry_limit" {
   default = 5
 }
-variable "trigger_type" {
-  description = "Type of the trigger: manual, event, or schedule"
-  type        = string
-  validation {
-    condition     = contains(["manual", "event", "schedule"], var.trigger_type)
-    error_message = "trigger_type must be one of: manual, event, schedule."
-  }
-}
 variable "trigger_config" {
   description = "Trigger configuration for the selected trigger_type"
   type = object({
