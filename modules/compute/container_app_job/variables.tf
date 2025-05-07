@@ -27,15 +27,26 @@ variable "workload_profile_name" {
 variable "replica_retry_limit" {
   default = 5
 }
-variable "manual_trigger_config" {
-  default = {}
-}
 variable "trigger_type" {
-  default = "manual"
+  description = "Type of the trigger: manual, event, or schedule"
+  type        = string
+  validation {
+    condition     = contains(["manual", "event", "schedule"], var.trigger_type)
+    error_message = "trigger_type must be one of: manual, event, schedule."
+  }
 }
 variable "trigger_config" {
-  default = {
-    parallelism              = 1
-    replica_completion_count = 1
-  }
+  description = "Trigger configuration for the selected trigger_type"
+  type = object({
+    parallelism              = optional(number)
+    replica_completion_count = optional(number)
+    scale = optional(object({
+      max_executions              = optional(number)
+      min_executions              = optional(number)
+      polling_interval_in_seconds = optional(number)
+      # Add more nested fields as needed
+    }))
+    cron_expression = optional(string)
+  })
+  default = {}
 }
