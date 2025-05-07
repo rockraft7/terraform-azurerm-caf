@@ -19,7 +19,7 @@ resource "azurerm_container_app_job" "caj" {
   replica_retry_limit          = var.replica_retry_limit
 
   dynamic "manual_trigger_config" {
-    for_each = var.trigger_type == "manual" ? var.trigger_config : []
+    for_each = var.trigger_type == "manual" ? var.trigger_config : {}
     content {
       parallelism              = try(manual_trigger_config.value.parallelism, 1)
       replica_completion_count = try(manual_trigger_config.value.replica_completion_count, 1)
@@ -27,7 +27,7 @@ resource "azurerm_container_app_job" "caj" {
   }
 
   dynamic "event_trigger_config" {
-    for_each = var.trigger_type == "event" ? var.trigger_config : []
+    for_each = var.trigger_type == "event" ? var.trigger_config : {}
     content {
       parallelism              = try(event_trigger_config.value.parallelism, 1)
       replica_completion_count = try(event_trigger_config.value.replica_completion_count, 1)
@@ -45,7 +45,7 @@ resource "azurerm_container_app_job" "caj" {
   }
 
   dynamic "schedule_trigger_config" {
-    for_each = var.trigger_type == "schedule" ? var.trigger_config : []
+    for_each = var.trigger_type == "schedule" ? var.trigger_config : {}
     content {
       parallelism              = try(schedule_trigger_config.value.parallelism, 1)
       cron_expression          = try(schedule_trigger_config.value.cron_expression, null)
