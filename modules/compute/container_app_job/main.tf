@@ -25,4 +25,5 @@ locals {
   resource_group_name = coalesce(var.resource_group_name, var.resource_group.name)
   replica_timeout_in_seconds = var.replica_timeout_in_seconds
   workload_profile_name = var.workload_profile_name
+  trigger_type = var.trigger_type
 }
