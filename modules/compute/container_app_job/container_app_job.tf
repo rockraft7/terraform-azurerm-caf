@@ -14,11 +14,35 @@ resource "azurerm_container_app_job" "caj" {
   container_app_environment_id = var.container_app_environment_id
   tags                         = merge(local.tags, try(var.settings.tags, null))
   location                     = local.location
-  replica_timeout_in_seconds   = local.replica_timeout_in_seconds
-  workload_profile_name        = local.workload_profile_name
+  replica_timeout_in_seconds   = var.replica_timeout_in_seconds
+  workload_profile_name        = var.workload_profile_name
   replica_retry_limit          = var.replica_retry_limit
 
-  manual_trigger_config {}
+  dynamic "manual_trigger_config" {
+    for_each = var.trigger_type == "manual" ? var.trigger_config : []
+    content {
+      parallelism              = try(manual_trigger_config.value.parallelism, 1)
+      replica_completion_count = try(manual_trigger_config.value.replica_completion_count, 1)
+    }
+  }
+
+  dynamic "event_trigger_config" {
+    for_each = var.trigger_type == "event" ? var.trigger_config : []
+    content {
+      parallelism              = try(event_trigger_config.value.parallelism, 1)
+      replica_completion_count = try(event_trigger_config.value.replica_completion_count, 1)
+      scale                    = try(event_trigger_config.value.scale, {})
+    }
+  }
+
+  dynamic "schedule_trigger_config" {
+    for_each = var.trigger_type == "schedule" ? var.trigger_config : []
+    content {
+      parallelism              = try(schedule_trigger_config.value.parallelism, 1)
+      cron_expression          = try(schedule_trigger_config.value.cron_expression, null)
+      replica_completion_count = try(schedule_trigger_config.value.replica_completion_count, 1)
+    }
+  }
 
   template {
     dynamic "container" {

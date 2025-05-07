@@ -30,3 +30,12 @@ variable "replica_retry_limit" {
 variable "manual_trigger_config" {
   default = {}
 }
+variable "trigger_type" {
+  default = "manual"
+}
+variable "trigger_config" {
+  default = {
+    parallelism              = 1
+    replica_completion_count = 1
+  }
+}
