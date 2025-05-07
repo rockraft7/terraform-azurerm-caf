@@ -31,7 +31,16 @@ resource "azurerm_container_app_job" "caj" {
     content {
       parallelism              = try(event_trigger_config.value.parallelism, 1)
       replica_completion_count = try(event_trigger_config.value.replica_completion_count, 1)
-      scale                    = try(event_trigger_config.value.scale, {})
+      # dynamic "scale" {
+      #   for_each = try(event_trigger_config.value.scale, {})
+        
+      #   content {
+      #     max_executions              = try(scale.value.max_executions, null)
+      #     min_executions              = try(scale,value.min_executions, null)
+      #     polling_interval_in_seconds = try(scale.value.polling_interval_in_seconds, null)
+      #     # rules
+      #   }
+      # }
     }
   }
 
