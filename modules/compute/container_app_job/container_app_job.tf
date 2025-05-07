@@ -14,12 +14,12 @@ resource "azurerm_container_app_job" "caj" {
   container_app_environment_id = var.container_app_environment_id
   tags                         = merge(local.tags, try(var.settings.tags, null))
   location                     = local.location
-  replica_timeout_in_seconds   = var.replica_timeout_in_seconds
-  workload_profile_name        = var.workload_profile_name
-  replica_retry_limit          = var.replica_retry_limit
+  replica_timeout_in_seconds   = try(var.settings.replica_timeout_in_seconds, 3000)
+  workload_profile_name        = try(var.settings.workload_profile_name, "Consumption")
+  replica_retry_limit          = try(var.settings.replica_retry_limit, 3)
 
   dynamic "manual_trigger_config" {
-    for_each = var.trigger_type == "manual" ? { "single" = var.trigger_config } : {}
+    for_each = var.settings.trigger_type == "manual" ? { "single" = var.trigger_config } : {}
     content {
       parallelism              = try(manual_trigger_config.value.parallelism, 1)
       replica_completion_count = try(manual_trigger_config.value.replica_completion_count, 1)
@@ -27,7 +27,7 @@ resource "azurerm_container_app_job" "caj" {
   }
 
   dynamic "event_trigger_config" {
-    for_each = var.trigger_type == "event" ? { "single" = var.trigger_config } : {}
+    for_each = var.settings.trigger_type == "event" ? { "single" = var.trigger_config } : {}
     content {
       parallelism              = try(event_trigger_config.value.parallelism, 1)
       replica_completion_count = try(event_trigger_config.value.replica_completion_count, 1)
@@ -45,7 +45,7 @@ resource "azurerm_container_app_job" "caj" {
   }
 
   dynamic "schedule_trigger_config" {
-    for_each = var.trigger_type == "schedule" ? { "single" = var.trigger_config } : {}
+    for_each = var.settings.trigger_type == "schedule" ? { "single" = var.trigger_config } : {}
     content {
       parallelism              = try(schedule_trigger_config.value.parallelism, 1)
       cron_expression          = try(schedule_trigger_config.value.cron_expression, null)
